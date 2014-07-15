@@ -1,7 +1,7 @@
 ---
 title       : This is R:esult
 subtitle    : Of course this doucment made from R.
-author      : Yuri Ohno (ohno.yuri@jp.fujitsu.com)
+author      : Yuri Ohno
 job         : Fujitsu Ltd.
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
@@ -13,16 +13,15 @@ knit        : slidify::knit2slides
 --- .quote .nobackground .segue .dark
 
 <center>
-  <q>
-    I hope this document help you.
-  </q>
+  <q>I hope this is helpful.</q>
 </center>
 
 ---
 
 # Agenda
 
-* Demonstrate Interactive Document with R and 
+* Demonstrate Interactive Document with R and buddies
+* And how will you share it ?
 * rCharts Capabilites
 * GoogleViz Capabilities
 
@@ -125,7 +124,7 @@ install.packages("SPARQL")
 ## いんたらくてぃぶ　ちゃーと
 
 Japanse also goes well.<br>
-日本語でも大丈夫。
+日本語でも大丈夫 (Windowsはむりー！)
 
 
 <div id = 'chart1' class = 'rChart nvd3'></div>
@@ -4252,7 +4251,7 @@ Let's go on to the visualization with Highcharts.
 
 ---
 
-## More Interactive
+## And More
 
 Including Shiny, we can dive into data.
 
@@ -4274,6 +4273,20 @@ Including Shiny, we can dive into data.
     <div id="metplot" class="shiny-html-output rChart"></div>
   </div>
 </div>
+
+--- .segue .dark
+
+## And how will you share it ?
+
+--- .quote
+
+## Unfortunatly that might be quit difficult !
+
+Shiny apps need to run above shiny server.
+In this case, back logic cann't be packed into client app.
+I mean that with only iPad you cann't view it.
+
+<q>In conclusion, you should create iOS app like shiny server.</q>
 
 --- .segue .dark
 
