@@ -2,7 +2,7 @@
 title       : This is R:esult
 subtitle    : Of course this doucment made from R.
 author      : Yuri Ohno
-job         : Fujitsu Ltd.
+job         : Free
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
