@@ -4319,6 +4319,7 @@ I mean that with only iPad you cann't view it.
 ## Reference
 
 * [Interactive Doucments](http://slidify.github.io/dcmeetup/demos/interactive/)
+* [気象庁XMLのSPARQL APIを利用してデータを俯瞰しよう](http://www.slideshare.net/yasuyukisugai/20144-aitc)
 * [rCharts](http://ramnathv.github.io/rCharts/)
 * [GoogleVis](https://github.com/mages/googleVis)
 
