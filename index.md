@@ -4253,7 +4253,7 @@ Let's go on to the visualization with Highcharts.
 
 ## And More
 
-Including Shiny, we can dive into data.
+Including Shiny, we can dive into data (If shiny server doesn't run, you can't see below chart.)
 
 <div class="row-fluid">
   <div class="span4">

@@ -203,7 +203,7 @@ p1$print("chart2")
 
 ## And More
 
-Including Shiny, we can dive into data.
+Including Shiny, we can dive into data (If shiny server doesn't run, you can't see below chart.)
 
 ```{r opts.label = 'shiny'}
 slidifyUI(
