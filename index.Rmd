@@ -1,0 +1,257 @@
+---
+title       : This is R:esult
+subtitle    : Of course this doucment made from R.
+author      : Yuri Ohno
+job         : Fujitsu Ltd.
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [bootstrap, quiz, shiny, interactive]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+ext_widgets : {rCharts: [libraries/nvd3, libraries/highcharts]}
+knit        : slidify::knit2slides
+--- .quote .nobackground .segue .dark
+
+<center>
+  <q>
+    I hope this document help you.
+  </q>
+</center>
+
+---
+
+# Agenda
+
+* Demonstrate Interactive Document with R and 
+* rCharts Capabilites
+* GoogleViz Capabilities
+
+---
+
+## Preliminary
+
+You prepare RStudio(newer is better) and R(>3.0).
+
+<img src="http://shiny.rstudio.com/tutorial/lesson2/www/bigorb.png" width="100" height="100">
+
+First of all, I'm sorry to say: you need Proxy...
+Type setting on RStudio console following manner.
+
+```r
+Sys.setenv("http_proxy"="http://(your ID):(your PW)@proxy.xxxx.com:8080/")
+```
+
+And also if you use ```devtools::install_github(package)``` command, you should below setting.
+
+```r
+library(httr)
+set_config(
+  use_proxy(url="proxy.xxxx.com", port=8080, username="your ID",password="your PW")
+)
+```
+
+---
+
+## Caracters - Slidify
+
+<img src="./assets/img/slidify_logo.png">
+
+> Slidify helps you create and publish beautiful HTML5 presentations from RMarkdown.
+
+* Install
+
+```r
+require(devtools)
+install_github(c('slidify', 'slidifyLibraries'), 'ramnathv')
+```
+
+---
+
+## Caracters - rCharts
+
+<img src="./assets/img/rcharts_logo.png">
+
+> rCharts is an R package to create, customize and publish interactive javascript visualizations from R using a familiar lattice style plotting interface.
+
+* Install
+
+```r
+require(devtools)
+install_github('rCharts', 'ramnathv')
+```
+
+---
+
+## Caracters - Shiny
+
+> A web application framework for R. Trurn your analyses into interactive web applications. No HTML, CSS, or JavaScript knowledge required.
+
+* Install
+
+```r
+require(devtools)
+install_github('shiny', 'rstudio')
+```
+
+---
+
+## Sub Caracters - GoogleViz
+
+> The googleVis package provides an interface between R and the Google Charts API.
+It allows users to create web pages with interactive charts based on R data frames, using the Google Charts API and to display them either via the local R HTTP help server or within their own sites, without uploading the data to Google. A modern browser with Internet connection is required and for some charts Flash.
+
+```r
+install.packages('googleVis')
+```
+
+---
+
+## Sub Caracters - SPARQL
+
+> SPARQL is a kind of query language regarding with RDF(Resource Description Framework). R has plug-in support [SPARQL client](http://cran.r-project.org/web/packages/SPARQL/index.html)
+
+* Install
+
+```r
+install.packages("SPARQL")
+```
+
+--- .segue .dark
+
+## Dive into Dynamic Document
+
+---
+
+## いんたらくてぃぶ　ちゃーと
+
+Japanse also goes well.<br>
+日本語でも大丈夫。
+
+```{r echo = F, results = 'asis'}
+# require(rCharts)
+haireye <- as.data.frame(HairEyeColor)
+n1 <- nPlot(Freq ~ Hair, group = 'Eye', type = 'multiBarChart',
+    data = subset(haireye, Sex == "Male")
+)
+n1$print('chart1')
+```
+
+---
+
+## SPARQL
+
+<img src="./assets/img/aitc_logo_small.png">
+
+Get Start with "Disaster Prevention Information from Japan Meteorological Agency".
+Endpoint is "http://api.aitc.jp/ds/sparql". Because of lack of authetication, we should not hit it maney times....
+
+```
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX atom: <http://www.w3.org/2005/Atom#>
+PREFIX jma: <http://cloud.projectla.jp/jma/>
+PREFIX area: <http://cloud.projectla.jp/jma/area#>
+PREFIX link2: <http://cloud.projectla.jp/jma/link2/>
+SELECT ?title ?mon (COUNT(?id) as ?c) 
+WHERE { ?id atom:title ?title . ?id atom:updated ?updated } 
+GROUP BY ?title (CONCAT(STR(YEAR(xsd:dateTime(?updated))), '/', STR(MONTH(xsd:dateTime(?updated))), '/01') AS ?mon)
+```
+
+---
+
+## And then done
+
+Unfortunatly API is very very fragile. So I stored data to CSV file(met.csv).
+
+```r
+# implement library
+require(SPARQL)
+require(rCharts)
+
+# set endpoint
+endpoint <- "http://api.aitc.jp/ds/sparql"
+
+# set query with SPARQL
+q <- "(I mentioned before.)""
+
+# Get Result
+result <- SPARQL(url=endpoint, query=q, ns=prefix, extra=list(output="csv"), format="csv")
+write.csv(result$result, file = "met.csv", row.names = T)
+```
+
+---
+
+## Visualization
+
+Let's go on to the visualization with Highcharts.
+
+<center>
+```{r echo = F, results='asis'}
+require(rCharts)
+result <- read.csv('met.csv', header=T, encoding="utf-8")
+result <- transform(result, date=as.Date(mon))
+reuslt <- result[order(result$title, result$date),]
+reuslt <- result[as.Date("2013/01/01")<=result$date,]
+
+# Visualize with Highchart
+result = transform(result, date = as.numeric(as.POSIXct(date))*1000)
+p1 <- hPlot(c ~ date, data=result, group="title")
+p1$xAxis(type='datetime', labels=list(format='{value:%Y-%m}'))
+p1$print("chart2")
+```
+</center>
+
+---
+
+## More Interactive
+
+Including Shiny, we can dive into data.
+
+```{r opts.label = 'shiny'}
+slidifyUI(
+  sidebarPanel(
+    selectInput('title', 'Choose Data', c('気象特別警報・警報・注意報', '土砂災害警戒情報', '震源に関する情報')),
+    selectInput('type', 'Choose Type',
+                c('line', 'scatter')
+    )
+  ),
+  mainPanel(
+    tags$div(id = 'metplot', class='shiny-html-output rChart')  
+  )
+)
+```
+
+--- .segue .dark
+
+## rCharts Capabilities
+
+---
+
+* So many JavaScript Vizualization Tool include in.
+  * Polycharts
+  * Morris
+  * NVD3
+  * xCharts
+  * HighCharts
+  * Leaflet
+  * Rickshaw
+  * end more !
+* You can play in [here](http://ramnathv.github.io/rCharts/).
+
+--- .segue .dark
+
+## GoogleVis Capabilities
+
+---
+
+* Below official document is very helpful at first time
+  * [GoogleVis](http://decastillo.github.io/googleVis_Tutorial/#14)
+
+---
+
+## Reference
+
+* [Interactive Doucments](http://slidify.github.io/dcmeetup/demos/interactive/)
+* [rCharts](http://ramnathv.github.io/rCharts/)
+* [GoogleVis](https://github.com/mages/googleVis)
+
+
