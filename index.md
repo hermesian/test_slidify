@@ -297,7 +297,7 @@ Japanse also goes well.<br>
 <img src="./assets/img/aitc_logo_small.png">
 
 Get Start with "Disaster Prevention Information from Japan Meteorological Agency".
-Endpoint is "http://api.aitc.jp/ds/sparql". Because of lack of authetication, we should not hit it maney times....
+Endpoint is "http://api.aitc.jp/ds/sparql". Because of lack of authetication, we should not hit it many times....
 
 ```
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
